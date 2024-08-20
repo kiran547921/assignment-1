@@ -1,0 +1,187 @@
+<html>
+
+<head>
+    <style>
+        header {
+            background-color: rgb(0, 0, 0);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            height: auto;
+        }
+        
+        .logo img {
+            width: 200px;
+            height: auto;
+        }
+        
+        .navigation ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .navigation li a {
+            text-decoration: none;
+            color: #fff;
+            transition: color 0.3s;
+        }
+        
+        .navigation li a:hover {
+            color: #f0f0f0;
+        }
+        
+        .navigation li:last-child {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
+        
+        .login-container {
+            width: 300px;
+            padding: 50px;
+            background-color: #ffffff;
+            border: 3px solid #000000;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .social-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .social-button {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 48%;
+            background-color: white;
+            border: 1px solid #ccc;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .social-button img {
+            width: 20px;
+            margin-right: 10px;
+        }
+        
+        .login-input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .login-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .login-button,
+        .reset-button {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .login-button {
+            background-color: #000000;
+            color: white;
+        }
+        
+        .reset-button {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .forgot-password,
+        .register-now {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    </style>
+    <title>Login Page</title>
+</head>
+
+
+<body style="display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+margin: 0;
+background-color: #f2f2f2;">
+    <div class="login-container">
+        <div class="social-buttons">
+            <button class="social-button">
+        <img src="google-icon.jpg" alt="Google">
+        Sign in with Google
+      </button>
+            <button class="social-button">
+        <img src="facebook-icon.png" alt="Facebook">
+        Sign in with Facebook
+      </button>
+        </div>
+        <h2>Login</h2>
+        <form action="?<php echo $_SERVER['PHP_SELF'];?>" method="post">
+            <input class="login-input" type="text" placeholder="Username" name="username" id="userid" required>
+            <input class="login-input" type="password" placeholder="Password" name="password" id="password" required>
+            <div class="login-buttons">
+                <button class="login-button" type="submit">Login</button>
+                <button class="reset-button" type="reset">Cancel</button>
+        </form>
+        <p class="forgot-password"><a href="#">Forgot Password?</a></p>
+        <p class="register-now">Don't have an account? <a href="registration form.php">Register Now !</a></p>
+        </div>
+</body>
+<?php
+        if($_SERVER["REQUEST_METHOD"] == "POST"){
+        $conn = mysqli_connect("localhost", "root", "", "alumniphp");
+         
+        // Check connection
+        if($conn === false){
+            die("ERROR: Could not connect. "
+                . mysqli_connect_error());
+        }
+        
+        // Taking all 5 values from the form data(input)
+        $reg_no =  $_REQUEST['username'];
+        $password=$_REQUEST['password'];
+
+        $sql = "SELECT * FROM signup WHERE id='$reg_no' and password='$password'";
+         $result = mysqli_query($conn, $sql);
+
+    if (!$result) {
+        die("Query failed: " . mysqli_error($conn));
+    }
+
+    // Check if a matching user was found
+    if (mysqli_num_rows($result) == 1) {
+        session_start();
+        $_SESSION['username'] = $reg_no;
+        echo '<script>window.location.href = "home.php";</script>';
+        exit(); 
+    } else {
+        // Invalid credentials
+        echo "Invalid username or password.";
+    }
+        // Close connection
+        mysqli_close($conn);
+        }
+        ?>
+
+</html>
